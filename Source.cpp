@@ -50,7 +50,7 @@ int menuInicial(){
 	cout << "                                  M E N U                                       \n\n"
 		<< "        T T                1 > Play Default Game                   U            \n"
 		<< "        R                  2 > Options                             J            \n"
-		<< "        E        R         3 > Instrucions                  C P    M            \n"
+		<< "        E        R         3 > Instructions                  C P    M            \n"
 		<< "               S U N       0 > Exit                         C D    L            \n";
 
 	char tecla = getchar();
