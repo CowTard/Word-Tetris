@@ -19,9 +19,9 @@ using namespace std;
 
 // DECLARAR FUNCOES
 int menuInicial(), proximaColuna();
-void prepararJogo(), jogar(vector< vector<string> >&), lerPalavrasDeFicheiro(), loadingScreen(int value), mostrarTela(vector< vector<string> > &), fazerJogada(char , int &, int&, vector< vector<string> > &);
+void prepararJogo(), jogar(vector< vector<string> >&), lerPalavrasDeFicheiro(), loadingScreen(int value), mostrarTela(vector< vector<string> > &), fazerJogada(char, int &, int&, vector< vector<string> > &);
 string proximaLetra();
-vector<string> criarAlfabeto(),filtrarVetor(char ,int=0 ,int=4343 );
+vector<string> criarAlfabeto(), filtrarVetor(char, int = 0, int = 4343);
 bool terminarJogo(vector< vector<string> >&, int &);
 
 // VARIAVEIS GLOBAIS
@@ -74,31 +74,31 @@ void lerPalavrasDeFicheiro(){
 	int numeroPalavras = 0;
 	bool terminarCiclo = false;
 	//return;
-		loadingScreen(0);
+	loadingScreen(0);
 
-		// LER FICHEIRO
-		string stringTemp = "";
-		ifstream myfile;
-		myfile.open("words.txt"); // TODO: Alterar
-		if (myfile.is_open()){
-			while (!myfile.eof()){
-				numeroPalavras++;
-				if ( numeroPalavras % 200 == 0)
-					loadingScreen(numeroPalavras);
+	// LER FICHEIRO
+	string stringTemp = "";
+	ifstream myfile;
+	myfile.open("words.txt"); // TODO: Alterar
+	if (myfile.is_open()){
+		while (!myfile.eof()){
+			numeroPalavras++;
+			if (numeroPalavras % 200 == 0)
+				loadingScreen(numeroPalavras);
 
-				getline(myfile, stringTemp);
-				palavrasDicionario.push_back(stringTemp);
-			}
-			myfile.close();
-			terminarCiclo = true;
+			getline(myfile, stringTemp);
+			palavrasDicionario.push_back(stringTemp);
 		}
-		else {
-			cout << "FILE NOT FOUND. PROGRAM WILL CLOSE IN 3 SECONDS" << endl;
-			Sleep(3000);
-			exit(1);
-		}
+		myfile.close();
+		terminarCiclo = true;
+	}
+	else {
+		cout << "FILE NOT FOUND. PROGRAM WILL CLOSE IN 3 SECONDS" << endl;
+		Sleep(3000);
+		exit(1);
+	}
 
-		system("CLS");
+	system("CLS");
 
 }
 
@@ -120,8 +120,8 @@ void jogar(vector< vector<string> >&tela){
 
 	char teclaCarregada = NULL;
 	int novaLetraColuna;
-	int altura =0;
-	string proximaLetraParaJogar= proximaLetra();
+	int altura = 0;
+	string proximaLetraParaJogar = proximaLetra();
 
 	do{
 		novaLetraColuna = proximaColuna();
@@ -133,17 +133,17 @@ void jogar(vector< vector<string> >&tela){
 			cout << "\nProxima letra: " + proximaLetraParaJogar << endl;
 			teclaCarregada = _getch();
 			teclaCarregada = _getch();
-			if (tela[altura+1][novaLetraColuna] == " ")
-				fazerJogada(teclaCarregada,altura, novaLetraColuna,tela);
+			if (tela[altura + 1][novaLetraColuna] == " ")
+				fazerJogada(teclaCarregada, altura, novaLetraColuna, tela);
 			else break;
-		} while (altura != (DimensaoVertical-1));
+		} while (altura != (DimensaoVertical - 1));
 
 	} while (terminarJogo(tela, novaLetraColuna));
 
 	system("pause");
 }
 
-bool terminarJogo(vector< vector<string> >&tela,int &proximoIntColuna){
+bool terminarJogo(vector< vector<string> >&tela, int &proximoIntColuna){
 
 
 	for (int i = 0; i < DimensaoHorizontal; i++){
@@ -158,8 +158,8 @@ void mostrarTela(vector< vector<string> > &tela){
 	system("cls");
 
 	cout << "********************************************************************************\n"
-		 << "*                               WordTetris                                     *\n"
-		 << "********************************************************************************\n\n\n";
+		<< "*                               WordTetris                                     *\n"
+		<< "********************************************************************************\n\n\n";
 
 	for (int i = 0; i < DimensaoVertical; i++){
 		cout << setw(28) << "| ";
@@ -171,10 +171,10 @@ void mostrarTela(vector< vector<string> > &tela){
 
 string proximaLetra(){
 
-		srand(time(NULL));
-		int indiceLetra = rand() % alfabeto.size();
+	srand(time(NULL));
+	int indiceLetra = rand() % alfabeto.size();
 
-		return alfabeto[indiceLetra];
+	return alfabeto[indiceLetra];
 }
 
 int proximaColuna(){
@@ -209,24 +209,24 @@ void loadingScreen(int value){
 	}
 }
 
-void fazerJogada(char direcao,int &x, int &y, vector< vector<string> > &tela){
+void fazerJogada(char direcao, int &x, int &y, vector< vector<string> > &tela){
 	string carater;
 	bool escrito = false;
 
-	switch(direcao){
+	switch (direcao){
 
 	case VK_DOWN:
 		if (x + 1 >= DimensaoVertical) break;
 		carater = tela[x][y];
 		tela[x][y] = " ";
-		tela[x+1][y] = carater;
+		tela[x + 1][y] = carater;
 		x += 1;
 		break;
 	case VK_RIGHT:
 		if (y + 1 >= DimensaoHorizontal) break;
 		carater = tela[x][y];
 		tela[x][y] = " ";
-		tela[x ][y+1] = carater;
+		tela[x][y + 1] = carater;
 		y += 1;
 		break;
 	case VK_LEFT:
@@ -239,16 +239,16 @@ void fazerJogada(char direcao,int &x, int &y, vector< vector<string> > &tela){
 	case VK_UP:
 		carater = tela[x][y];
 		tela[x][y] = " ";
-		
-		for(int i = x; i < DimensaoVertical; i++){
-			if( tela[i][y] != " "){
+
+		for (int i = x; i < DimensaoVertical; i++){
+			if (tela[i][y] != " "){
 				tela[i][y] = carater;
 				x = i;
 				escrito = true;
 			}
 		}
 
-		if(!escrito){
+		if (!escrito){
 			x = 9;
 			tela[x][y] = carater;
 		}
@@ -278,6 +278,7 @@ vector<string> criarAlfabeto(){
 	alfabetoCompleto.push_back("H");
 	alfabetoCompleto.push_back("I");
 	alfabetoCompleto.push_back("J");
+	alfabetoCompleto.push_back("K");
 	alfabetoCompleto.push_back("L");
 	alfabetoCompleto.push_back("M");
 	alfabetoCompleto.push_back("N");
@@ -289,45 +290,44 @@ vector<string> criarAlfabeto(){
 	alfabetoCompleto.push_back("T");
 	alfabetoCompleto.push_back("U");
 	alfabetoCompleto.push_back("V");
-	alfabetoCompleto.push_back("X");
-	alfabetoCompleto.push_back("Z");
-	alfabetoCompleto.push_back("Y");
 	alfabetoCompleto.push_back("W");
-	alfabetoCompleto.push_back("K");
+	alfabetoCompleto.push_back("X");
+	alfabetoCompleto.push_back("Y");
+	alfabetoCompleto.push_back("Z");
 
 	return alfabetoCompleto;
 
 }
 
-vector<string> filtrarVetor(char primeiraLetra,int imin,int imax){
+vector<string> filtrarVetor(char primeiraLetra, int imin, int imax){
 
 	vector<string> palavrasDeIndiceInferiorAoMidPoint;
 	vector<string> palavrasDeIndiceSuperiorAoMidPoint;
 	vector<string> aRetornar;
 	// binary search
-	
-	if(imax > imin){
 
-		int imid = (imax + imin)/2;
+	if (imax > imin){
 
-		if(palavrasDicionario[imid].at(0) > primeiraLetra)
-			return filtrarVetor(primeiraLetra,imin,imid/2);
-		else if( palavrasDicionario[imid].at(0) < primeiraLetra ){
-			return filtrarVetor(primeiraLetra,imid/2,imax);
+		int imid = (imax + imin) / 2;
+
+		if (palavrasDicionario[imid].at(0) > primeiraLetra)
+			return filtrarVetor(primeiraLetra, imin, imid / 2);
+		else if (palavrasDicionario[imid].at(0) < primeiraLetra){
+			return filtrarVetor(primeiraLetra, imid / 2, imax);
 		}
 		else{
-			
+
 			int i = imid;
 
 			/*
-			 *  Exemplo vetor { Axxx, Bas,bes,bis,bos,bos, Cxxx }
- 			 *
-			 *  Palavra encontrada = bis
-			 *
-			 *  Metodo: Partindo do indice de "bis", subtrai-se uma em uma palavra, fazendo push_back() simultaneamente, até encontrar um indice em que a palavra nao começa com "b"
+			*  Exemplo vetor { Axxx, Bas,bes,bis,bos,bos, Cxxx }
+			*
+			*  Palavra encontrada = bis
+			*
+			*  Metodo: Partindo do indice de "bis", subtrai-se uma em uma palavra, fazendo push_back() simultaneamente, até encontrar um indice em que a palavra nao começa com "b"
 			*/
 
-			while(i>=0 && palavrasDicionario[i].at(0) == primeiraLetra){
+			while (i >= 0 && palavrasDicionario[i].at(0) == primeiraLetra){
 
 				palavrasDeIndiceInferiorAoMidPoint.push_back(palavrasDicionario[i]);
 				i--;
@@ -335,7 +335,7 @@ vector<string> filtrarVetor(char primeiraLetra,int imin,int imax){
 
 			i = imid;
 
-			while(i<4344 && palavrasDicionario[i].at(0) == primeiraLetra){
+			while (i<4344 && palavrasDicionario[i].at(0) == primeiraLetra){
 
 				palavrasDeIndiceSuperiorAoMidPoint.push_back(palavrasDicionario[i]);
 				i++;
@@ -343,26 +343,31 @@ vector<string> filtrarVetor(char primeiraLetra,int imin,int imax){
 		}
 
 		/*
-			 *  De modo a facilitar o algoritmo de semelhança de strings, ordena-se as palavras alfabéticamente. No "dicionario" já se encontravam , contudo no passo anterior, a ordem reverteu-se
-			 *  
-			 *  
-			 *
-			*/
+		*  De modo a facilitar o algoritmo de semelhança de strings, ordena-se as palavras alfabéticamente. No "dicionario" já se encontravam , contudo no passo anterior, a ordem reverteu-se
+		*
+		*
+		*
+		*/
 
-			 reverse(palavrasDeIndiceInferiorAoMidPoint.begin(),palavrasDeIndiceInferiorAoMidPoint.end());
+		reverse(palavrasDeIndiceInferiorAoMidPoint.begin(), palavrasDeIndiceInferiorAoMidPoint.end());
 
 
-			 // push_back() para vetor final
+		// push_back() para vetor final
 
-			 for(int i = 0; i < palavrasDeIndiceInferiorAoMidPoint.size(); i++){
-				 aRetornar.push_back(palavrasDeIndiceInferiorAoMidPoint[i]);
-			 }
+		for (int i = 0; i < palavrasDeIndiceInferiorAoMidPoint.size(); i++){
+			aRetornar.push_back(palavrasDeIndiceInferiorAoMidPoint[i]);
+		}
 
-			 for(int i = 0; i < palavrasDeIndiceSuperiorAoMidPoint.size(); i++){
-				 aRetornar.push_back(palavrasDeIndiceSuperiorAoMidPoint[i]);
-			 }
+		for (int i = 0; i < palavrasDeIndiceSuperiorAoMidPoint.size(); i++){
+			aRetornar.push_back(palavrasDeIndiceSuperiorAoMidPoint[i]);
+		}
 	}
 
 
 	return aRetornar;
+}
+
+int algoritmoNaive(vector < vector<string> > &tela, string linha){
+
+
 }
