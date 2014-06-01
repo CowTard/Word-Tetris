@@ -20,6 +20,7 @@ using namespace std;
 // DECLARAR FUNCOES
 int menuInicial(), proximaColuna();
 void prepararJogo(), jogar(vector< vector<string> >&), lerPalavrasDeFicheiro(), loadingScreen(int value), mostrarTela(vector< vector<string> > &), fazerJogada(char, int &, int&, vector< vector<string> > &);
+void algoritmoNaive(vector < vector<string> > &, string, int);
 string proximaLetra();
 vector<string> criarAlfabeto(), filtrarVetor(char, int = 0, int = 4343);
 bool terminarJogo(vector< vector<string> >&, int &);
@@ -122,6 +123,8 @@ void jogar(vector< vector<string> >&tela){
 	int novaLetraColuna;
 	int altura = 0;
 	string proximaLetraParaJogar = proximaLetra();
+	int numeroLinhaCompleta = NULL; 
+	string linha = "AAAAA";
 
 	do{
 		novaLetraColuna = proximaColuna();
@@ -136,6 +139,8 @@ void jogar(vector< vector<string> >&tela){
 			if (tela[altura + 1][novaLetraColuna] == " ")
 				fazerJogada(teclaCarregada, altura, novaLetraColuna, tela);
 			else break;
+			if (linhaCheia(tela,linha, numeroLinhaCompleta))
+				algoritmoNaive(tela, linha, numeroLinhaCompleta);
 		} while (altura != (DimensaoVertical - 1));
 
 	} while (terminarJogo(tela, novaLetraColuna));
@@ -335,7 +340,7 @@ vector<string> filtrarVetor(char primeiraLetra, int imin, int imax){
 
 			i = imid;
 
-			while (i<4344 && palavrasDicionario[i].at(0) == primeiraLetra){
+			while (i < 4344 && palavrasDicionario[i].at(0) == primeiraLetra){
 
 				palavrasDeIndiceSuperiorAoMidPoint.push_back(palavrasDicionario[i]);
 				i++;
@@ -367,7 +372,68 @@ vector<string> filtrarVetor(char primeiraLetra, int imin, int imax){
 	return aRetornar;
 }
 
-int algoritmoNaive(vector < vector<string> > &tela, string linha){
+void algoritmoNaive(vector < vector<string> > &tela, string linha, int numeroIndice){
 
+	for (int i = 0; i < linha.size() - 2; i++){
+		vector<string> palavrasDoDicionario = filtrarVetor(linha.at(i));
 
+		// Para cada palavra verificar equivalencia
+
+		string palavra;
+		int primeiroIndice = NULL;
+		int ultimoIndice = NULL;
+
+		for (int i = 0; i < palavrasDoDicionario.size(); i++){
+
+			palavra = palavrasDoDicionario[i];
+
+			// percorrer linha e verificar correspondencia
+			for (int i = 0; i < linha.size() - palavra.size(); i++){
+
+				if (ultimoIndice - primeiroIndice == palavra.size())
+					break;
+
+				if (palavra[i] == linha[i] && primeiroIndice == NULL){
+					primeiroIndice = i;
+					ultimoIndice = i;
+				}
+				else if (palavra[i] == linha[i]){
+					ultimoIndice = i;
+				}
+				else {
+					primeiroIndice = NULL;
+					ultimoIndice = NULL;
+					break;
+				}
+			}
+
+			if (primeiroIndice != NULL)
+			for (int i = primeiroIndice; i <= ultimoIndice; i++){
+				for (int j = numeroIndice; j > 0; j--){
+					tela[j][i] = tela[j - 1][i];
+				}
+			}
+		}
+	}
 }
+
+bool linhaCheia(vector< vector<string> > tela,string &linha, int &numeroLinhaCompleta){
+	bool vazia = false;
+	for (int i = 0; i < DimensaoVertical; i++){
+		numeroLinhaCompleta = i;
+		for (int j = 0; j < DimensaoHorizontal; j++){
+			if (tela[i][j] != " " && j == DimensaoHorizontal - 1){
+				continue;
+			}
+			else if (tela[i][j] != " "){
+				vazia = true;
+				return vazia;
+			}
+			else break;
+			}
+		}
+
+	return false;
+}
+
+
