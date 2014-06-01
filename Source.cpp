@@ -9,11 +9,11 @@
 #include <sstream>
 #include <iomanip>
 
-
-#define VK_DOWN 80
-#define VK_LEFT 75
-#define VK_RIGHT 77
-#define VK_UP 72
+//default controls
+char VKDOWN = 80;
+char VKLEFT = 75;
+char VKRIGHT = 77;
+char VKUP = 72;
 
 using namespace std;
 
@@ -24,6 +24,8 @@ void algoritmoNaive(vector < vector<string> > &, string, int);
 string proximaLetra();
 vector<string> criarAlfabeto(), filtrarVetor(char, int = 0, int = 4343);
 bool terminarJogo(vector< vector<string> >&, int &);
+void menuOpcoes();
+int alterarControlos();
 
 // VARIAVEIS GLOBAIS
 vector<string> palavrasDicionario;
@@ -218,30 +220,29 @@ void fazerJogada(char direcao, int &x, int &y, vector< vector<string> > &tela){
 	string carater;
 	bool escrito = false;
 
-	switch (direcao){
-
-	case VK_DOWN:
-		if (x + 1 >= DimensaoVertical) break;
+	
+	if(direcao==VKDOWN){
+		if (x + 1 >= DimensaoVertical) return;
 		carater = tela[x][y];
 		tela[x][y] = " ";
 		tela[x + 1][y] = carater;
 		x += 1;
-		break;
-	case VK_RIGHT:
-		if (y + 1 >= DimensaoHorizontal) break;
+	}
+	else if(direcao==VKRIGHT){
+		if (y + 1 >= DimensaoHorizontal) return;
 		carater = tela[x][y];
 		tela[x][y] = " ";
 		tela[x][y + 1] = carater;
 		y += 1;
-		break;
-	case VK_LEFT:
-		if (y - 1 < 0) break;
+	}
+	else if(direcao==VKLEFT){
+		if (y - 1 < 0) return;
 		carater = tela[x][y];
 		tela[x][y] = " ";
 		tela[x][y - 1] = carater;
 		y -= 1;
-		break;
-	case VK_UP:
+	}
+	else if(direcao==VKUP){
 		carater = tela[x][y];
 		tela[x][y] = " ";
 
@@ -257,18 +258,16 @@ void fazerJogada(char direcao, int &x, int &y, vector< vector<string> > &tela){
 			x = 9;
 			tela[x][y] = carater;
 		}
-
-		break;
-	default:
-		if (x + 1 >= DimensaoVertical) break;
+	}
+	else{
+		if (x + 1 >= DimensaoVertical) return;
 		carater = tela[x][y];
 		tela[x][y] = " ";
 		tela[x + 1][y] = carater;
 		x += 1;
-		break;
 	}
+	
 }
-
 vector<string> criarAlfabeto(){
 
 	vector<string> alfabetoCompleto;
@@ -436,4 +435,78 @@ bool linhaCheia(vector< vector<string> > tela,string &linha, int &numeroLinhaCom
 	return false;
 }
 
+void menuOpcoes(){
+	system("cls");
 
+	cout << "********************************************************************************\n"
+		 << "*                                 Controls                                     *\n"
+		 << "********************************************************************************\n\n\n";
+		
+
+	
+	cout << "\n\n  Special key - VK_UP     \n"
+			"   Right key  - VK_RIGHT  \n"
+			"    Left key  - VK_LEFT   \n"
+			"    Down key  - VK_DOWN   \n";
+
+	cout << "\n\n\n\n\n\n\n         Press ENTER to change them or ESC to return to the main menu\n\n";
+
+
+	char tecla = _getch();
+
+		switch (tecla)
+	{
+	case 13:
+		alterarControlos();
+		break;
+	case 27:
+		menuInicial();
+		break;
+	}
+
+}
+
+int alterarControlos(){
+	system("cls");
+
+	cout << "********************************************************************************\n"
+		 << "*                                 Controls                                     *\n"
+		 << "********************************************************************************\n\n\n";
+
+	cout << "\n\n                           >>   Special key   <<     \n";
+	cout << "\n\n\n\n\n\n\n\n                           Press the key you want\n\n";
+	VKUP=_getch();
+
+	system("cls");
+
+	cout << "********************************************************************************\n"
+		 << "*                                 Controls                                     *\n"
+		 << "********************************************************************************\n\n\n";
+
+	cout << "\n\n                               >>   Right key   <<     \n";
+	cout << "\n\n\n\n\n\n\n\n                           Press the key you want\n\n";
+	VKRIGHT=_getch();
+
+	system("cls");
+
+	cout << "********************************************************************************\n"
+		 << "*                                 Controls                                     *\n"
+		 << "********************************************************************************\n\n\n";
+
+	cout << "\n\n                               >>   Left key   <<     \n";
+	cout << "\n\n\n\n\n\n\n\n                           Press the key you want\n\n";
+	VKLEFT=_getch();
+
+	system("cls");
+
+	cout << "********************************************************************************\n"
+		 << "*                                 Controls                                     *\n"
+		 << "********************************************************************************\n\n\n";
+
+	cout << "\n\n                               >>   Down key   <<     \n";
+	cout << "\n\n\n\n\n\n\n\n                           Press the key you want\n\n";
+	VKDOWN=_getch();
+
+menuInicial();
+	return 0;
+}
