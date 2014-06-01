@@ -1,4 +1,3 @@
-a
 abandon
 ability
 able
@@ -51,7 +50,6 @@ actor
 actress
 actual
 actually
-ad
 adapt
 add
 added
@@ -104,7 +102,6 @@ agree
 agreement
 agricultural
 agriculture
-ah
 ahead
 aid
 aide
@@ -142,7 +139,6 @@ although
 altogether
 aluminum
 always
-am
 amazing
 ambassador
 ambition
@@ -229,7 +225,6 @@ artifact
 artificial
 artist
 artistic
-as
 ash
 asian
 aside
@@ -256,7 +251,6 @@ assume
 assumption
 assure
 astronomer
-at
 athlete
 athletic
 atmosphere
@@ -335,7 +329,6 @@ bathroom
 battery
 battle
 bay
-be
 beach
 beam
 bean
@@ -512,7 +505,6 @@ butterfly
 button
 buy
 buyer
-by
 cab
 cabin
 cabinet
@@ -1157,7 +1149,6 @@ divine
 division
 divorce
 dna
-do
 dock
 doctor
 doctrine
@@ -1712,7 +1703,6 @@ global
 globe
 glory
 glove
-go
 goal
 goat
 god
@@ -1773,7 +1763,6 @@ gun
 gut
 guy
 gym
-ha
 habit
 habitat
 hair
@@ -1804,7 +1793,6 @@ haul
 have
 hay
 hazard
-he
 head
 headache
 headline
@@ -1838,7 +1826,6 @@ hers
 herself
 hesitate
 hey
-hi
 hidden
 hide
 high
@@ -1912,7 +1899,6 @@ hurry
 hurt
 husband
 hypothesis
-i
 ice
 icon
 idea
@@ -1923,8 +1909,6 @@ identify
 identity
 ideological
 ideology
-ie
-if
 ignore
 ill
 illegal
@@ -1957,7 +1941,6 @@ improve
 improved
 improvement
 impulse
-in
 incentive
 incident
 include
@@ -2096,7 +2079,6 @@ isolated
 isolation
 israeli
 issue
-it
 italian
 item
 its
@@ -2354,7 +2336,6 @@ maximum
 may
 maybe
 mayor
-me
 meal
 mean
 meaning
@@ -2470,9 +2451,7 @@ mouth
 move
 movement
 movie
-mr
 mrs
-ms
 much
 mud
 multiple
@@ -2488,7 +2467,6 @@ muslim
 must
 mutter
 mutual
-my
 myself
 mysterious
 mystery
@@ -2540,7 +2518,6 @@ nice
 night
 nightmare
 nine
-no
 nobody
 nod
 noise
@@ -2596,7 +2573,6 @@ occur
 ocean
 odd
 odds
-of
 off
 offender
 offense
@@ -2608,16 +2584,12 @@ officer
 official
 officially
 often
-oh
 oil
-ok
-ok
 okay
 old
 old-fashioned
 olympic
 olympics
-on
 once
 one
 one-third
@@ -2644,7 +2616,6 @@ opposition
 opt
 optimistic
 option
-or
 oral
 orange
 orbit
@@ -2752,7 +2723,6 @@ pattern
 pause
 pay
 payment
-pc
 peace
 peaceful
 peak
@@ -2850,7 +2820,6 @@ plenty
 plot
 plunge
 plus
-pm
 pocket
 poem
 poet
@@ -3091,7 +3060,6 @@ rating
 ratio
 rational
 raw
-re
 reach
 react
 reaction
@@ -3556,7 +3524,6 @@ snake
 snap
 sneak
 snow
-so
 so-called
 soak
 soap
@@ -3961,7 +3928,6 @@ tire
 tired
 tissue
 title
-to
 tobacco
 today
 toe
@@ -4064,7 +4030,6 @@ tune
 tunnel
 turkey
 turn
-tv
 twelve
 twentieth
 twenty
@@ -4077,7 +4042,6 @@ type
 typical
 typically
 ugly
-uh
 ultimate
 ultimately
 unable
@@ -4117,7 +4081,6 @@ unlikely
 unprecedented
 until
 unusual
-up
 update
 upon
 upper
@@ -4125,7 +4088,6 @@ upset
 upstairs
 urban
 urge
-us
 use
 used
 useful
@@ -4192,7 +4154,6 @@ volunteer
 vote
 voter
 voting
-vs
 vulnerable
 wage
 wagon
@@ -4217,7 +4178,6 @@ watch
 water
 wave
 way
-we
 weak
 weaken
 weakness
