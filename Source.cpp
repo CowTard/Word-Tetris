@@ -260,7 +260,7 @@ void fazerJogada(char direcao, int &x, int &y, vector< vector<string> > &tela){
 	else if (direcao == CTRL_CIMA){
 		carater = tela[x][y];
 		tela[x][y] = " ";
-		for (int i = x + 1; i < dimensaoVertical; i++){
+		for (int i = x; i < dimensaoVertical; i++){
 			if (tela[i][y] != " "){
 				tela[i - 1][y] = carater;
 				x = i - 1;
@@ -270,7 +270,7 @@ void fazerJogada(char direcao, int &x, int &y, vector< vector<string> > &tela){
 		}
 
 		if (!escrito){
-			x = 9;
+			x = dimensaoVertical-1;
 			tela[x][y] = carater;
 		}
 	}
