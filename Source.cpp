@@ -11,9 +11,9 @@
 
 using namespace std;
 
-// DECLARAR FUNCOES
+// Declarar funções
 int menuInicial(), proximaColuna();
-void prepararJogo(), jogar(vector< vector<string> >&), lerPalavrasDeFicheiro(), loadingScreen(int value), mostrarTela(vector< vector<string> > &), fazerJogada(char, int &, int&, vector< vector<string> > &);
+void prepararJogo(), jogar(vector< vector<string> >&), lerPalavrasDeFicheiro(), loadingScreen(int value), mostrarTela(vector< vector<string> > &), fazerJogada(char, int &, int&, vector< vector<string> > &), verificarPalavras(vector<vector<string>>&, int&);
 vector<size_t> algoritmoNaive(vector<vector<string>>&, string, string);
 string proximaLetra(), convertInt(int number);
 vector<string> criarAlfabeto(), filtrarVetor(char, int = 0, int = 4290);
@@ -45,7 +45,7 @@ int menuInicial(){
 		system("cls");
 
 		cout << "********************************************************************************\n"
-			<< "*                         Welcome to WordTetrisPlus                            *\n"
+			<< "*                         Welcome to WordTetris Plus                           *\n"
 			<< "********************************************************************************\n\n\n"
 			<< "                                  M E N U                                       \n\n"
 			<< "        M T                1   > Play Default Game                   U          \n"
@@ -79,7 +79,7 @@ void lerPalavrasDeFicheiro(){
 	// LER FICHEIRO
 	string stringTemp = "";
 	ifstream myfile;
-	myfile.open("words.txt"); // TODO: Alterar
+	myfile.open("words.txt");
 	if (myfile.is_open()){
 		while (!myfile.eof()){
 			numeroPalavras++;
@@ -110,6 +110,7 @@ void prepararJogo(){
 		for (int j = 0; j < dimensaoHorizontal; j++)
 			tela[i].push_back(" ");
 	}
+
 	jogar(tela);
 }
 
@@ -120,57 +121,101 @@ void jogar(vector<vector<string>>& tela){
 	int altura = 0;
 	int pontuacao = 0;
 	string proximaLetraParaJogar = proximaLetra();
-	int numeroLinhaCompleta = NULL;
-	string linha = "";
 
 	do {
 		novaLetraColuna = proximaColuna();
 		altura = 0;
 		tela[altura][novaLetraColuna] = proximaLetraParaJogar;
+		proximaLetraParaJogar = proximaLetra();
 		do {
 			mostrarTela(tela);
-			proximaLetraParaJogar = proximaLetra();
-			cout << " Pontuacao: " + convertInt(pontuacao) << endl;
-			cout << "---------------------" << endl;
-			cout << "\nProxima letra: " + proximaLetraParaJogar << endl;
+
+			cout << " Score: " + convertInt(pontuacao) << endl;
+			cout << "------------------" << endl;
+			cout << "Next letter: " + proximaLetraParaJogar << endl;
 			cout << "> ESC to exit" << endl;
 
 			_getch();
 			teclaCarregada = _getch();
-			if (teclaCarregada == 27)
-			{
-				return;
-			}
+
+			if (teclaCarregada == 27) return;
+
 			if (teclaCarregada == CTRL_CIMA){
 				fazerJogada(teclaCarregada, altura, novaLetraColuna, tela);
 				break;
 			}
 			else if ((altura + 1) < dimensaoVertical && tela[altura + 1][novaLetraColuna] == " ")
-				fazerJogada(teclaCarregada, altura, novaLetraColuna, tela);		
+				fazerJogada(teclaCarregada, altura, novaLetraColuna, tela);
 			else break;
 		} while (altura < dimensaoVertical);
 
-		if (linhaCheia(tela, linha, numeroLinhaCompleta)) {
-			for (int i = 0; i < dimensaoHorizontal; i++) {
-				vector<string> dicFiltrado = filtrarVetor(tela[numeroLinhaCompleta][i].at(0) + 32);
-				vector<size_t> matches;
-				for (auto it_needle = dicFiltrado.cbegin(); it_needle != dicFiltrado.cend(); it_needle++) {
-					matches = algoritmoNaive(tela, *it_needle, linha);
-					if (!matches.empty()) break;
-				}
-
-				if (!matches.empty()) {
-					for (unsigned int j = matches[0]; j <= matches[1]; j++)
-						tela[numeroLinhaCompleta][j] = " ";
-
-					pontuacao += matches[1] - matches[0] + 1;
-					break;
-				}
-			} 
-		}
+		verificarPalavras(tela, pontuacao);
 	} while (terminarJogo(tela, novaLetraColuna));
 
 	system("pause");
+}
+
+void verificarPalavras(vector<vector<string>>& tela, int& pontuacao) {
+	for (unsigned int j = 0; j < dimensaoHorizontal; j++) {
+		string palheiro = "";
+
+		for (unsigned int i = 0; i < dimensaoVertical; i++) {
+			palheiro += tela[i][j];
+		}
+
+		for (unsigned int k = 0; k < palheiro.length(); k++) {
+			vector<string> dicFiltrado = filtrarVetor(palheiro[k] + 32);
+			vector<size_t> matches;
+			for (auto it_needle = dicFiltrado.cbegin(); it_needle != dicFiltrado.cend(); it_needle++) {
+				matches = algoritmoNaive(tela, *it_needle, palheiro);
+				if (!matches.empty()) break;
+			}
+
+			if (!matches.empty()) {
+				for (unsigned int i = matches[0]; i <= matches[1]; i++)
+					tela[i][j] = " ";
+
+				pontuacao += matches[1] - matches[0] + 1;
+				break;
+			}
+		}
+
+	}
+
+	for (unsigned int i = 0; i < dimensaoVertical; i++) {
+		string palheiro = "";
+
+		for (unsigned int j = 0; j < dimensaoHorizontal; j++) {
+			palheiro += tela[i][j];
+		}
+
+		for (unsigned int k = 0; k < palheiro.length(); k++) {
+			vector<string> dicFiltrado = filtrarVetor(palheiro[k] + 32);
+			vector<size_t> matches;
+			for (auto it_needle = dicFiltrado.cbegin(); it_needle != dicFiltrado.cend(); it_needle++) {
+				matches = algoritmoNaive(tela, *it_needle, palheiro);
+				if (!matches.empty()) break;
+			}
+
+			if (!matches.empty()) {
+				for (unsigned int j = matches[0]; j <= matches[1]; j++)
+					tela[i][j] = " ";
+
+				pontuacao += matches[1] - matches[0] + 1;
+				break;
+			}
+		}
+
+	}
+
+	for (int j = dimensaoVertical - 1; j >= 0; j--) {
+		for (unsigned int k = 0; k < dimensaoHorizontal; k++) {
+			if (j > 0 && tela[j][k] == " " && tela[j - 1][k] != " ") {
+				tela[j][k] = tela[j - 1][k];
+				tela[j - 1][k] = " ";
+			}
+		}
+	}
 }
 
 bool terminarJogo(vector< vector<string> >&tela, int &proximoIntColuna){
@@ -186,8 +231,8 @@ void mostrarTela(vector< vector<string> > &tela){
 	system("cls");
 
 	cout << "********************************************************************************\n"
-		<< "*                               WordTetris                                     *\n"
-		<< "********************************************************************************\n\n\n";
+		<< "*                               WordTetris Plus                                *\n"
+		<< "********************************************************************************\n\n";
 
 	for (int i = 0; i < dimensaoVertical; i++){
 		cout << setw(28) << "| ";
@@ -197,10 +242,8 @@ void mostrarTela(vector< vector<string> > &tela){
 	}
 }
 
-string proximaLetra(){
-
-	int  consoanteOuVogal = rand() % 100 ;
-	
+string proximaLetra() {
+	int  consoanteOuVogal = rand() % 100;
 
 	if (consoanteOuVogal < 34){
 		vector<string> vogais = { "A", "E", "I", "O", "U" };
@@ -215,7 +258,6 @@ string proximaLetra(){
 
 		return consoantes[rand() % consoantes.size()];
 	}
-
 }
 
 int proximaColuna(){
@@ -223,11 +265,10 @@ int proximaColuna(){
 }
 
 void loadingScreen(int value){
-
-	vector<int> escolha = { 1,2, 3 , 4 , 7 , 9 , 11 , 13 };
+	vector<int> escolha = { 1, 2, 3, 4, 7, 9, 11, 13 };
 
 	int aMostrar = value * 100 / 5000;
-	if (escolha.at((rand() % 9)) % 2 == 0){
+	if (escolha[(rand() % 8)] % 2 == 0){
 		Sleep(500);
 		system("CLS");
 
@@ -276,7 +317,7 @@ void fazerJogada(char direcao, int &x, int &y, vector< vector<string> > &tela){
 		}
 
 		if (!escrito){
-			x = dimensaoVertical-1;
+			x = dimensaoVertical - 1;
 			tela[x][y] = carater;
 		}
 	}
@@ -385,8 +426,7 @@ vector<size_t> algoritmoNaive(vector<vector<string>>& tela, string needle, strin
 
 		if (needleIndex == needleSize) {
 			matches.push_back(haystackIndex);
-				matches.push_back(haystackIndex + (needleIndex - 1 - haystackIndex));
-
+			matches.push_back(haystackIndex + needleIndex - 1);
 			return matches;
 		}
 	}
@@ -484,21 +524,18 @@ void alterarControlos(){
 }
 
 void alterarDimensoes(){
-
 	system("cls");
 	string stringTemp;
 	cout << "********************************************************************************\n"
-		 << "*                                 Dimension Options                            *\n"
-		 << "********************************************************************************\n\n\n";
+		<< "*                                 Dimension Options                            *\n"
+		<< "********************************************************************************\n\n\n\n\n";
 
-	cout << "Vertical dimension: ";
+	cout << "  > Vertical dimension: ";
 	getline(cin, stringTemp);
 	dimensaoVertical = stoi(stringTemp);
-	cout << endl << "Horizontal dimension: ";
+	cout << endl << "\n  > Horizontal dimension: ";
 	getline(cin, stringTemp);
 	dimensaoHorizontal = stoi(stringTemp);
-
-	return;
 }
 
 void menuInstrucoes(){
@@ -536,17 +573,17 @@ string convertInt(int number)
 }
 
 void menuOptions(){
-
 	system("cls");
 	cout << "********************************************************************************\n"
 		<< "*                                 Options                                       *\n"
-		<< "********************************************************************************\n\n\n"
-		<< "1. Change dimensions\n"
-		<< "2. Change keys\n"
-		<< "3. Exit \n" << endl;
+		<< "********************************************************************************\n\n\n\n\n"
+		<< "  1 > Change dimensions\n\n"
+		<< "  2 > Change keys\n\n"
+		<< "  3 > Exit \n" << endl;
 
-		char tecla;
-	do{
+	char tecla;
+
+	do {
 		tecla = _getch();
 
 		if (tecla == '1'){
