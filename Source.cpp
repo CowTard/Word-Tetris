@@ -16,7 +16,7 @@ int menuInicial(), proximaColuna();
 void prepararJogo(), jogar(vector< vector<string> >&), lerPalavrasDeFicheiro(), loadingScreen(int value), mostrarTela(vector< vector<string> > &), fazerJogada(char, int &, int&, vector< vector<string> > &);
 vector<size_t> algoritmoNaive(vector<vector<string>>&, string, string);
 string proximaLetra();
-vector<string> criarAlfabeto(), filtrarVetor(char, int = 0, int = 4302);
+vector<string> criarAlfabeto(), filtrarVetor(char, int = 0, int = 4290);
 bool terminarJogo(vector< vector<string> >&, int &);
 void menuOpcoes();
 void alterarControlos();
@@ -315,7 +315,7 @@ vector<string> filtrarVetor(char primeiraLetra, int imin, int imax){
 
 			i = imid;
 
-			while (i <= 4302 && dicionario[i].at(0) == primeiraLetra){
+			while (i <= 4290 && dicionario[i].at(0) == primeiraLetra){
 
 				palavrasDeIndiceSuperiorAoMidPoint.push_back(dicionario[i]);
 				i++;
