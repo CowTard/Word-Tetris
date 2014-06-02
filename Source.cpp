@@ -133,7 +133,7 @@ void jogar(vector<vector<string>>& tela){
 			cout << " Pontuacao: " + convertInt(pontuacao) << endl;
 			cout << "---------------------" << endl;
 			cout << "\nProxima letra: " + proximaLetraParaJogar << endl;
-			cout << " ESC to exit" << endl;
+			cout << "> ESC to exit" << endl;
 
 			_getch();
 			teclaCarregada = _getch();
@@ -198,9 +198,24 @@ void mostrarTela(vector< vector<string> > &tela){
 }
 
 string proximaLetra(){
-	int indiceLetra = rand() % alfabeto.size();
 
-	return alfabeto[indiceLetra];
+	int  consoanteOuVogal = rand() % 100 ;
+	
+
+	if (consoanteOuVogal < 34){
+		vector<string> vogais = { "A", "E", "I", "O", "U" };
+		return vogais[rand() % vogais.size()];
+	}
+	else {
+		vector<string> consoantes;
+		for (unsigned int i = 0; i < alfabeto.size(); i++){
+			if (alfabeto[i] != "A" || alfabeto[i] != "E" || alfabeto[i] != "I" || alfabeto[i] != "O" || alfabeto[i] != "U")
+				consoantes.push_back(alfabeto[i]);
+		}
+
+		return consoantes[rand() % consoantes.size()];
+	}
+
 }
 
 int proximaColuna(){
@@ -209,16 +224,7 @@ int proximaColuna(){
 
 void loadingScreen(int value){
 
-	vector<int> escolha;
-	escolha.push_back(1);
-	escolha.push_back(3);
-	escolha.push_back(4);
-	escolha.push_back(7);
-	escolha.push_back(9);
-	escolha.push_back(11);
-	escolha.push_back(13);
-	escolha.push_back(2);
-	escolha.push_back(4);
+	vector<int> escolha = { 1,2, 3 , 4 , 7 , 9 , 11 , 13 };
 
 	int aMostrar = value * 100 / 5000;
 	if (escolha.at((rand() % 9)) % 2 == 0){
