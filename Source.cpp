@@ -35,8 +35,7 @@ char CTRL_DIR = 77;
 char CTRL_CIMA = 72;
 
 int main(){
-	//srand(time(NULL));
-	srand(3);
+	srand(time(NULL));
 	lerPalavrasDeFicheiro();
 	menuInicial();
 
@@ -114,9 +113,15 @@ void prepararJogo(){
 			tela[i].push_back(" ");
 	}
 
+	tela[9][0] = "F";
+	tela[9][1] = "A";
+	tela[9][2] = "N";
 	tela[9][3] = "F";
-	tela[9][4] = "A";
-	tela[9][5] = "N";
+	tela[9][4] = "F";
+	tela[9][5] = "F";
+	tela[9][6] = "G";
+	tela[9][9] = "G";
+
 
 	jogar(tela);
 }
@@ -134,8 +139,8 @@ void jogar(vector<vector<string>>& tela){
 	do {
 		novaLetraColuna = proximaColuna();
 		altura = 0;
-		tela[altura][novaLetraColuna] = proximaLetraParaJogar;
 		proximaLetraParaJogar = proximaLetra();
+		tela[altura][novaLetraColuna] = proximaLetraParaJogar;
 		do {
 			mostrarTela(tela);
 			cout << " Pontuacao: " + convertInt(pontuacao) << endl;
@@ -260,12 +265,12 @@ void fazerJogada(char direcao, int &x, int &y, vector< vector<string> > &tela){
 	else if (direcao == CTRL_CIMA){
 		carater = tela[x][y];
 		tela[x][y] = " ";
-
-		for (int i = x; i < dimensaoVertical; i++){
+		for (int i = x+1; i < dimensaoVertical; i++){
 			if (tela[i][y] != " "){
-				tela[i][y] = carater;
-				x = i;
+				tela[i-1][y] = carater;
+				x = i-1;
 				escrito = true;
+				return;
 			}
 		}
 
@@ -379,7 +384,8 @@ vector<size_t> algoritmoNaive(vector<vector<string>>& tela, string needle, strin
 
 		if (needleIndex == needleSize) {
 			matches.push_back(haystackIndex);
-			matches.push_back(haystackIndex + (needleIndex - 1 - haystackIndex));
+				matches.push_back(haystackIndex + (needleIndex - 1 - haystackIndex));
+
 			return matches;
 		}
 	}
