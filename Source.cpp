@@ -139,21 +139,25 @@ void jogar(vector<vector<string>>& tela){
 	do {
 		novaLetraColuna = proximaColuna();
 		altura = 0;
-		proximaLetraParaJogar = proximaLetra();
 		tela[altura][novaLetraColuna] = proximaLetraParaJogar;
 		do {
 			mostrarTela(tela);
+			proximaLetraParaJogar = proximaLetra();
 			cout << " Pontuacao: " + convertInt(pontuacao) << endl;
 			cout << "---------------------" << endl;
 			cout << "\nProxima letra: " + proximaLetraParaJogar << endl;
 
 			_getch();
 			teclaCarregada = _getch();
-
-			if (tela[altura + 1][novaLetraColuna] == " ")
+ 
+			if (teclaCarregada == CTRL_CIMA){
 				fazerJogada(teclaCarregada, altura, novaLetraColuna, tela);
+				break;
+			}
+			else if (tela[altura + 1][novaLetraColuna] == " ")
+				fazerJogada(teclaCarregada, altura, novaLetraColuna, tela);		
 			else break;
-		} while (altura != (dimensaoVertical - 1));
+		} while (altura < dimensaoVertical);
 
 		if (linhaCheia(tela, linha, numeroLinhaCompleta)) {
 			for (int i = 0; i < dimensaoHorizontal; i++) {
@@ -265,10 +269,10 @@ void fazerJogada(char direcao, int &x, int &y, vector< vector<string> > &tela){
 	else if (direcao == CTRL_CIMA){
 		carater = tela[x][y];
 		tela[x][y] = " ";
-		for (int i = x+1; i < dimensaoVertical; i++){
+		for (int i = x + 1; i < dimensaoVertical; i++){
 			if (tela[i][y] != " "){
-				tela[i-1][y] = carater;
-				x = i-1;
+				tela[i - 1][y] = carater;
+				x = i - 1;
 				escrito = true;
 				return;
 			}
@@ -279,14 +283,14 @@ void fazerJogada(char direcao, int &x, int &y, vector< vector<string> > &tela){
 			tela[x][y] = carater;
 		}
 	}
-	else{
+	else {
 		if (x + 1 >= dimensaoVertical) return;
+		else if (tela[x + 1][y] != " ") return;
 		carater = tela[x][y];
 		tela[x][y] = " ";
 		tela[x + 1][y] = carater;
 		x += 1;
 	}
-
 }
 
 vector<string> criarAlfabeto(){
