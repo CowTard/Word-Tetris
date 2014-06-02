@@ -18,9 +18,7 @@ vector<size_t> algoritmoNaive(vector<vector<string>>&, string, string);
 string proximaLetra(), convertInt(int number);
 vector<string> criarAlfabeto(), filtrarVetor(char, int = 0, int = 4290);
 bool terminarJogo(vector< vector<string> >&, int &);
-void menuOpcoes();
-void alterarControlos();
-void menuInstrucoes();
+void menuOpcoes(), alterarControlos(), alterarDimensoes(), menuInstrucoes(), menuOptions();
 bool linhaCheia(vector<vector<string>>, string&, int&);
 
 // Variáveis globais
@@ -62,7 +60,7 @@ int menuInicial(){
 			prepararJogo();
 			break;
 		case '2':
-			menuOpcoes();
+			menuOptions();
 			break;
 		case '3':
 			menuInstrucoes();
@@ -112,17 +110,6 @@ void prepararJogo(){
 		for (int j = 0; j < dimensaoHorizontal; j++)
 			tela[i].push_back(" ");
 	}
-
-	tela[9][0] = "F";
-	tela[9][1] = "A";
-	tela[9][2] = "N";
-	tela[9][3] = "F";
-	tela[9][4] = "F";
-	tela[9][5] = "F";
-	tela[9][6] = "G";
-	tela[9][9] = "G";
-
-
 	jogar(tela);
 }
 
@@ -146,15 +133,19 @@ void jogar(vector<vector<string>>& tela){
 			cout << " Pontuacao: " + convertInt(pontuacao) << endl;
 			cout << "---------------------" << endl;
 			cout << "\nProxima letra: " + proximaLetraParaJogar << endl;
+			cout << " ESC to exit" << endl;
 
 			_getch();
 			teclaCarregada = _getch();
- 
+			if (teclaCarregada == 27)
+			{
+				return;
+			}
 			if (teclaCarregada == CTRL_CIMA){
 				fazerJogada(teclaCarregada, altura, novaLetraColuna, tela);
 				break;
 			}
-			else if (tela[altura + 1][novaLetraColuna] == " ")
+			else if ((altura + 1) < dimensaoVertical && tela[altura + 1][novaLetraColuna] == " ")
 				fazerJogada(teclaCarregada, altura, novaLetraColuna, tela);		
 			else break;
 		} while (altura < dimensaoVertical);
@@ -486,6 +477,24 @@ void alterarControlos(){
 	CTRL_BAIXO = _getch();
 }
 
+void alterarDimensoes(){
+
+	system("cls");
+	string stringTemp;
+	cout << "********************************************************************************\n"
+		 << "*                                 Dimension Options                            *\n"
+		 << "********************************************************************************\n\n\n";
+
+	cout << "Vertical dimension: ";
+	getline(cin, stringTemp);
+	dimensaoVertical = stoi(stringTemp);
+	cout << endl << "Horizontal dimension: ";
+	getline(cin, stringTemp);
+	dimensaoHorizontal = stoi(stringTemp);
+
+	return;
+}
+
 void menuInstrucoes(){
 
 	system("cls");
@@ -520,4 +529,29 @@ string convertInt(int number)
 	return ss.str();
 }
 
+void menuOptions(){
 
+	system("cls");
+	cout << "********************************************************************************\n"
+		<< "*                                 Options                                       *\n"
+		<< "********************************************************************************\n\n\n"
+		<< "1. Change dimensions\n"
+		<< "2. Change keys\n"
+		<< "3. Exit \n" << endl;
+
+		char tecla;
+	do{
+		tecla = _getch();
+
+		if (tecla == '1'){
+			alterarDimensoes();
+			break;
+		}
+		else if (tecla == '2'){
+			menuOpcoes();
+			break;
+		}
+		else if (tecla == '3')
+			return;
+	} while (true);
+}
