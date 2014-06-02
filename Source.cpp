@@ -15,7 +15,7 @@ using namespace std;
 int menuInicial(), proximaColuna();
 void prepararJogo(), jogar(vector< vector<string> >&), lerPalavrasDeFicheiro(), loadingScreen(int value), mostrarTela(vector< vector<string> > &), fazerJogada(char, int &, int&, vector< vector<string> > &);
 vector<size_t> algoritmoNaive(vector<vector<string>>&, string, string);
-string proximaLetra();
+string proximaLetra(), convertInt(int number);
 vector<string> criarAlfabeto(), filtrarVetor(char, int = 0, int = 4290);
 bool terminarJogo(vector< vector<string> >&, int &);
 void menuOpcoes();
@@ -114,6 +114,10 @@ void prepararJogo(){
 			tela[i].push_back(" ");
 	}
 
+	tela[9][3] = "F";
+	tela[9][4] = "A";
+	tela[9][5] = "N";
+
 	jogar(tela);
 }
 
@@ -122,6 +126,7 @@ void jogar(vector<vector<string>>& tela){
 	char teclaCarregada = NULL;
 	int novaLetraColuna;
 	int altura = 0;
+	int pontuacao = 0;
 	string proximaLetraParaJogar = proximaLetra();
 	int numeroLinhaCompleta = NULL;
 	string linha = "";
@@ -133,6 +138,8 @@ void jogar(vector<vector<string>>& tela){
 		proximaLetraParaJogar = proximaLetra();
 		do {
 			mostrarTela(tela);
+			cout << " Pontuacao: " + convertInt(pontuacao) << endl;
+			cout << "---------------------" << endl;
 			cout << "\nProxima letra: " + proximaLetraParaJogar << endl;
 
 			_getch();
@@ -153,11 +160,13 @@ void jogar(vector<vector<string>>& tela){
 				}
 
 				if (!matches.empty()) {
-					for (int j = matches[0]; j <= matches[1]; j++)
+					for (unsigned int j = matches[0]; j <= matches[1]; j++)
 						tela[numeroLinhaCompleta][j] = " ";
+
+					pontuacao += matches[1] - matches[0] + 1;
 					break;
 				}
-			}
+			} 
 		}
 	} while (terminarJogo(tela, novaLetraColuna));
 
@@ -274,11 +283,12 @@ void fazerJogada(char direcao, int &x, int &y, vector< vector<string> > &tela){
 	}
 
 }
+
 vector<string> criarAlfabeto(){
 	string alfabeto = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	vector<string> alfabetoCompleto;
 
-	for (int i = 0; i < alfabeto.length(); i++) {
+	for (unsigned int i = 0; i < alfabeto.length(); i++) {
 		stringstream aux;
 		aux << alfabeto[i];
 		alfabetoCompleto.push_back(aux.str());
@@ -340,11 +350,11 @@ vector<string> filtrarVetor(char primeiraLetra, int imin, int imax){
 
 	// push_back() para vetor final
 
-	for (int i = 0; i < palavrasDeIndiceInferiorAoMidPoint.size(); i++){
+	for (unsigned int i = 0; i < palavrasDeIndiceInferiorAoMidPoint.size(); i++){
 		aRetornar.push_back(palavrasDeIndiceInferiorAoMidPoint[i]);
 	}
 
-	for (int i = 0; i < palavrasDeIndiceSuperiorAoMidPoint.size(); i++){
+	for (unsigned int i = 0; i < palavrasDeIndiceSuperiorAoMidPoint.size(); i++){
 		aRetornar.push_back(palavrasDeIndiceSuperiorAoMidPoint[i]);
 	}
 
@@ -492,3 +502,12 @@ void menuInstrucoes(){
 		tecla = _getch();
 	} while (tecla != 13);
 }
+
+string convertInt(int number)
+{
+	stringstream ss;
+	ss << number;
+	return ss.str();
+}
+
+
