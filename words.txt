@@ -85,7 +85,6 @@ affect
 afford
 afraid
 african
-african-american
 after
 afternoon
 afterward
@@ -1210,7 +1209,7 @@ duty
 dying
 dynamic
 dynamics
-e-mail
+email
 each
 eager
 ear
@@ -1638,7 +1637,6 @@ frustration
 fucking
 fuel
 full
-full-time
 fully
 fun
 function
@@ -1799,7 +1797,7 @@ headline
 headquarters
 heal
 health
-health-care
+healthcare
 healthy
 hear
 hearing
@@ -1829,7 +1827,6 @@ hey
 hidden
 hide
 high
-high-tech
 highlight
 highly
 highway
@@ -2256,7 +2253,6 @@ logic
 logical
 lonely
 long
-long-term
 longtime
 look
 loop
@@ -2409,7 +2405,6 @@ mistake
 mix
 mixed
 mixture
-mm-hmm
 mobile
 mode
 model
@@ -2587,12 +2582,10 @@ often
 oil
 okay
 old
-old-fashioned
 olympic
 olympics
 once
 one
-one-third
 ongoing
 onion
 online
@@ -3364,7 +3357,6 @@ select
 selected
 selection
 self
-self-esteem
 sell
 seller
 seminar
@@ -3437,7 +3429,6 @@ shop
 shopping
 shore
 short
-short-term
 shortage
 shortly
 shorts
@@ -3524,7 +3515,6 @@ snake
 snap
 sneak
 snow
-so-called
 soak
 soap
 soar
@@ -3793,7 +3783,7 @@ sympathy
 symptom
 syndrome
 system
-t-shirt
+tshirt
 table
 tablespoon
 tackle
@@ -4037,7 +4027,6 @@ twice
 twin
 twist
 two
-two-thirds
 type
 typical
 typically
@@ -4199,8 +4188,6 @@ weird
 welcome
 welfare
 well
-well-being
-well-known
 west
 western
 wet
