@@ -9,34 +9,34 @@
 #include <sstream>
 #include <iomanip>
 
-//default controls
-char VKDOWN = 80;
-char VKLEFT = 75;
-char VKRIGHT = 77;
-char VKUP = 72;
-
 using namespace std;
 
 // DECLARAR FUNCOES
 int menuInicial(), proximaColuna();
 void prepararJogo(), jogar(vector< vector<string> >&), lerPalavrasDeFicheiro(), loadingScreen(int value), mostrarTela(vector< vector<string> > &), fazerJogada(char, int &, int&, vector< vector<string> > &);
-void algoritmoNaive(vector < vector<string> > &, string, int);
+vector<size_t> algoritmoNaive(vector<vector<string>>&, string, string);
 string proximaLetra();
-vector<string> criarAlfabeto(), filtrarVetor(char, int = 0, int = 4343);
+vector<string> criarAlfabeto(), filtrarVetor(char, int = 0, int = 4302);
 bool terminarJogo(vector< vector<string> >&, int &);
 void menuOpcoes();
-int alterarControlos();
+void alterarControlos();
 void menuInstrucoes();
-// VARIAVEIS GLOBAIS
-vector<string> palavrasDicionario;
+bool linhaCheia(vector<vector<string>>, string&, int&);
+
+// Variáveis globais
+vector<string> dicionario;
 vector<string> alfabeto = criarAlfabeto();
-int DimensaoHorizontal = 10;
-int DimensaoVertical = 10;
-
-
+int dimensaoHorizontal = 10;
+int dimensaoVertical = 10;
+// Controlos
+char CTRL_BAIXO = 80;
+char CTRL_ESQ = 75;
+char CTRL_DIR = 77;
+char CTRL_CIMA = 72;
 
 int main(){
-
+	//srand(time(NULL));
+	srand(3);
 	lerPalavrasDeFicheiro();
 	menuInicial();
 
@@ -44,41 +44,39 @@ int main(){
 }
 
 int menuInicial(){
+	while (true) {
+		system("cls");
 
-	system("cls");
+		cout << "********************************************************************************\n"
+			<< "*                         Welcome to WordTetrisPlus                            *\n"
+			<< "********************************************************************************\n\n\n"
+			<< "                                  M E N U                                       \n\n"
+			<< "        M T                1   > Play Default Game                   U          \n"
+			<< "  R                        2   > Options                   J                    \n"
+			<< "        E        R         3   > Instructions                  C P    M         \n"
+			<< "               S W N       ESC > Exit                8          D    L          \n";
 
-	cout << "********************************************************************************\n"
-		<< "*                         Welcome to WordTetrisPlus                            *\n"
-		<< "********************************************************************************\n\n\n";
-	cout << "                                  M E N U                                       \n\n"
-		<< "        T T                1 > Play Default Game                   U            \n"
-		<< "        R                  2 > Options                             J            \n"
-		<< "        E        R         3 > Instructions                  C P    M            \n"
-		<< "               S U N       0 > Exit                         C D    L            \n";
+		char tecla = _getch();
 
-	char tecla = getchar();
-
-	switch (tecla)
-	{
-	case '1':
-		prepararJogo();
-		break;
-	case '2':
-		menuOpcoes();
-		break;
-	case '3':
-		menuInstrucoes();
-		break;
-	case '0':
-		exit(0);
+		switch (tecla) {
+		case '1':
+			prepararJogo();
+			break;
+		case '2':
+			menuOpcoes();
+			break;
+		case '3':
+			menuInstrucoes();
+			break;
+		case 27:
+			return 0;
+		}
 	}
 }
 
 void lerPalavrasDeFicheiro(){
-
 	int numeroPalavras = 0;
 	bool terminarCiclo = false;
-	//return;
 	loadingScreen(0);
 
 	// LER FICHEIRO
@@ -92,7 +90,7 @@ void lerPalavrasDeFicheiro(){
 				loadingScreen(numeroPalavras);
 
 			getline(myfile, stringTemp);
-			palavrasDicionario.push_back(stringTemp);
+			dicionario.push_back(stringTemp);
 		}
 		myfile.close();
 		terminarCiclo = true;
@@ -108,12 +106,11 @@ void lerPalavrasDeFicheiro(){
 }
 
 void prepararJogo(){
+	vector<vector<string>> tela;
 
-	vector< vector<string> > tela;
-
-	for (int i = 0; i < DimensaoVertical; i++) {
+	for (int i = 0; i < dimensaoVertical; i++) {
 		tela.push_back(vector<string>());
-		for (int j = 0; j < DimensaoHorizontal; j++)
+		for (int j = 0; j < dimensaoHorizontal; j++)
 			tela[i].push_back(" ");
 	}
 
@@ -121,41 +118,54 @@ void prepararJogo(){
 }
 
 
-void jogar(vector< vector<string> >&tela){
-
+void jogar(vector<vector<string>>& tela){
 	char teclaCarregada = NULL;
 	int novaLetraColuna;
 	int altura = 0;
 	string proximaLetraParaJogar = proximaLetra();
-	int numeroLinhaCompleta = NULL; 
-	string linha = "AAAAA";
+	int numeroLinhaCompleta = NULL;
+	string linha = "";
 
-	do{
+	do {
 		novaLetraColuna = proximaColuna();
 		altura = 0;
 		tela[altura][novaLetraColuna] = proximaLetraParaJogar;
 		proximaLetraParaJogar = proximaLetra();
-		do{
+		do {
 			mostrarTela(tela);
 			cout << "\nProxima letra: " + proximaLetraParaJogar << endl;
+
+			_getch();
 			teclaCarregada = _getch();
-			teclaCarregada = _getch();
+
 			if (tela[altura + 1][novaLetraColuna] == " ")
 				fazerJogada(teclaCarregada, altura, novaLetraColuna, tela);
 			else break;
-			if (linhaCheia(tela,linha, numeroLinhaCompleta))
-				algoritmoNaive(tela, linha, numeroLinhaCompleta);
-		} while (altura != (DimensaoVertical - 1));
+		} while (altura != (dimensaoVertical - 1));
 
+		if (linhaCheia(tela, linha, numeroLinhaCompleta)) {
+			for (int i = 0; i < dimensaoHorizontal; i++) {
+				vector<string> dicFiltrado = filtrarVetor(tela[numeroLinhaCompleta][i].at(0) + 32);
+				vector<size_t> matches;
+				for (auto it_needle = dicFiltrado.cbegin(); it_needle != dicFiltrado.cend(); it_needle++) {
+					matches = algoritmoNaive(tela, *it_needle, linha);
+					if (!matches.empty()) break;
+				}
+
+				if (!matches.empty()) {
+					for (int j = matches[0]; j <= matches[1]; j++)
+						tela[numeroLinhaCompleta][j] = " ";
+					break;
+				}
+			}
+		}
 	} while (terminarJogo(tela, novaLetraColuna));
 
 	system("pause");
 }
 
 bool terminarJogo(vector< vector<string> >&tela, int &proximoIntColuna){
-
-
-	for (int i = 0; i < DimensaoHorizontal; i++){
+	for (int i = 0; i < dimensaoHorizontal; i++){
 		if (tela[0][i] != " " && proximoIntColuna == i)
 			return false;
 	}
@@ -170,26 +180,22 @@ void mostrarTela(vector< vector<string> > &tela){
 		<< "*                               WordTetris                                     *\n"
 		<< "********************************************************************************\n\n\n";
 
-	for (int i = 0; i < DimensaoVertical; i++){
+	for (int i = 0; i < dimensaoVertical; i++){
 		cout << setw(28) << "| ";
-		for (int j = 0; j < DimensaoHorizontal; j++)
+		for (int j = 0; j < dimensaoHorizontal; j++)
 			cout << tela[i][j] + " ";
-		cout << "|\n " << setw(26) << "|" << setw(DimensaoHorizontal * 2 + 2) << "|" << "\n";
+		cout << "|\n " << setw(26) << "|" << setw(dimensaoHorizontal * 2 + 2) << "|" << "\n";
 	}
 }
 
 string proximaLetra(){
-
-	srand(time(NULL));
 	int indiceLetra = rand() % alfabeto.size();
 
 	return alfabeto[indiceLetra];
 }
 
 int proximaColuna(){
-
-	srand(time(NULL));
-	return rand() % DimensaoHorizontal;
+	return rand() % dimensaoHorizontal;
 }
 
 void loadingScreen(int value){
@@ -206,7 +212,6 @@ void loadingScreen(int value){
 	escolha.push_back(4);
 
 	int aMostrar = value * 100 / 5000;
-	srand(time(NULL));
 	if (escolha.at((rand() % 9)) % 2 == 0){
 		Sleep(500);
 		system("CLS");
@@ -222,33 +227,32 @@ void fazerJogada(char direcao, int &x, int &y, vector< vector<string> > &tela){
 	string carater;
 	bool escrito = false;
 
-	
-	if(direcao==VKDOWN){
-		if (x + 1 >= DimensaoVertical) return;
+	if (direcao == CTRL_BAIXO){
+		if (x + 1 >= dimensaoVertical) return;
 		carater = tela[x][y];
 		tela[x][y] = " ";
 		tela[x + 1][y] = carater;
 		x += 1;
 	}
-	else if(direcao==VKRIGHT){
-		if (y + 1 >= DimensaoHorizontal) return;
+	else if (direcao == CTRL_DIR){
+		if (y + 1 >= dimensaoHorizontal) return;
 		carater = tela[x][y];
 		tela[x][y] = " ";
 		tela[x][y + 1] = carater;
 		y += 1;
 	}
-	else if(direcao==VKLEFT){
+	else if (direcao == CTRL_ESQ){
 		if (y - 1 < 0) return;
 		carater = tela[x][y];
 		tela[x][y] = " ";
 		tela[x][y - 1] = carater;
 		y -= 1;
 	}
-	else if(direcao==VKUP){
+	else if (direcao == CTRL_CIMA){
 		carater = tela[x][y];
 		tela[x][y] = " ";
 
-		for (int i = x; i < DimensaoVertical; i++){
+		for (int i = x; i < dimensaoVertical; i++){
 			if (tela[i][y] != " "){
 				tela[i][y] = carater;
 				x = i;
@@ -262,67 +266,37 @@ void fazerJogada(char direcao, int &x, int &y, vector< vector<string> > &tela){
 		}
 	}
 	else{
-		if (x + 1 >= DimensaoVertical) return;
+		if (x + 1 >= dimensaoVertical) return;
 		carater = tela[x][y];
 		tela[x][y] = " ";
 		tela[x + 1][y] = carater;
 		x += 1;
 	}
-	
+
 }
 vector<string> criarAlfabeto(){
-
+	string alfabeto = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	vector<string> alfabetoCompleto;
 
-	alfabetoCompleto.push_back("A");
-	alfabetoCompleto.push_back("B");
-	alfabetoCompleto.push_back("C");
-	alfabetoCompleto.push_back("D");
-	alfabetoCompleto.push_back("E");
-	alfabetoCompleto.push_back("F");
-	alfabetoCompleto.push_back("G");
-	alfabetoCompleto.push_back("H");
-	alfabetoCompleto.push_back("I");
-	alfabetoCompleto.push_back("J");
-	alfabetoCompleto.push_back("K");
-	alfabetoCompleto.push_back("L");
-	alfabetoCompleto.push_back("M");
-	alfabetoCompleto.push_back("N");
-	alfabetoCompleto.push_back("O");
-	alfabetoCompleto.push_back("P");
-	alfabetoCompleto.push_back("Q");
-	alfabetoCompleto.push_back("R");
-	alfabetoCompleto.push_back("S");
-	alfabetoCompleto.push_back("T");
-	alfabetoCompleto.push_back("U");
-	alfabetoCompleto.push_back("V");
-	alfabetoCompleto.push_back("W");
-	alfabetoCompleto.push_back("X");
-	alfabetoCompleto.push_back("Y");
-	alfabetoCompleto.push_back("Z");
+	for (int i = 0; i < alfabeto.length(); i++) {
+		stringstream aux;
+		aux << alfabeto[i];
+		alfabetoCompleto.push_back(aux.str());
+	}
 
 	return alfabetoCompleto;
-
 }
 
 vector<string> filtrarVetor(char primeiraLetra, int imin, int imax){
-
 	vector<string> palavrasDeIndiceInferiorAoMidPoint;
 	vector<string> palavrasDeIndiceSuperiorAoMidPoint;
 	vector<string> aRetornar;
 	// binary search
 
-	if (imax > imin){
+	while (imax >= imin) {
+		int imid = imin + (imax - imin) / 2;
 
-		int imid = (imax + imin) / 2;
-
-		if (palavrasDicionario[imid].at(0) > primeiraLetra)
-			return filtrarVetor(primeiraLetra, imin, imid / 2);
-		else if (palavrasDicionario[imid].at(0) < primeiraLetra){
-			return filtrarVetor(primeiraLetra, imid / 2, imax);
-		}
-		else{
-
+		if (dicionario[imid].at(0) == primeiraLetra) {
 			int i = imid;
 
 			/*
@@ -333,106 +307,92 @@ vector<string> filtrarVetor(char primeiraLetra, int imin, int imax){
 			*  Metodo: Partindo do indice de "bis", subtrai-se uma em uma palavra, fazendo push_back() simultaneamente, até encontrar um indice em que a palavra nao começa com "b"
 			*/
 
-			while (i >= 0 && palavrasDicionario[i].at(0) == primeiraLetra){
+			while (i >= 0 && dicionario[i].at(0) == primeiraLetra){
 
-				palavrasDeIndiceInferiorAoMidPoint.push_back(palavrasDicionario[i]);
+				palavrasDeIndiceInferiorAoMidPoint.push_back(dicionario[i]);
 				i--;
 			}
 
 			i = imid;
 
-			while (i < 4344 && palavrasDicionario[i].at(0) == primeiraLetra){
+			while (i <= 4302 && dicionario[i].at(0) == primeiraLetra){
 
-				palavrasDeIndiceSuperiorAoMidPoint.push_back(palavrasDicionario[i]);
+				palavrasDeIndiceSuperiorAoMidPoint.push_back(dicionario[i]);
 				i++;
 			}
+
+			break;
 		}
-
-		/*
-		*  De modo a facilitar o algoritmo de semelhança de strings, ordena-se as palavras alfabéticamente. No "dicionario" já se encontravam , contudo no passo anterior, a ordem reverteu-se
-		*
-		*
-		*
-		*/
-
-		reverse(palavrasDeIndiceInferiorAoMidPoint.begin(), palavrasDeIndiceInferiorAoMidPoint.end());
-
-
-		// push_back() para vetor final
-
-		for (int i = 0; i < palavrasDeIndiceInferiorAoMidPoint.size(); i++){
-			aRetornar.push_back(palavrasDeIndiceInferiorAoMidPoint[i]);
-		}
-
-		for (int i = 0; i < palavrasDeIndiceSuperiorAoMidPoint.size(); i++){
-			aRetornar.push_back(palavrasDeIndiceSuperiorAoMidPoint[i]);
-		}
+		else if (dicionario[imid].at(0) < primeiraLetra)
+			imin = imid + 1;
+		else
+			imax = imid - 1;
 	}
 
+	/*
+	*  De modo a facilitar o algoritmo de semelhança de strings, ordena-se as palavras alfabeticamente. No "dicionário" já se encontravam , contudo no passo anterior, a ordem reverteu-se
+	*
+	*
+	*
+	*/
+
+	reverse(palavrasDeIndiceInferiorAoMidPoint.begin(), palavrasDeIndiceInferiorAoMidPoint.end());
+
+	// push_back() para vetor final
+
+	for (int i = 0; i < palavrasDeIndiceInferiorAoMidPoint.size(); i++){
+		aRetornar.push_back(palavrasDeIndiceInferiorAoMidPoint[i]);
+	}
+
+	for (int i = 0; i < palavrasDeIndiceSuperiorAoMidPoint.size(); i++){
+		aRetornar.push_back(palavrasDeIndiceSuperiorAoMidPoint[i]);
+	}
 
 	return aRetornar;
 }
 
-void algoritmoNaive(vector < vector<string> > &tela, string linha, int numeroIndice){
+vector<size_t> algoritmoNaive(vector<vector<string>>& tela, string needle, string palheiro){
+	for (size_t i = 0; i < palheiro.length(); i++)
+		palheiro[i] += 32;
 
-	for (int i = 0; i < linha.size() - 2; i++){
-		vector<string> palavrasDoDicionario = filtrarVetor(linha.at(i));
+	vector<size_t> matches;
 
-		// Para cada palavra verificar equivalencia
+	if (needle.size() > palheiro.size())
+		return matches;
 
-		string palavra;
-		int primeiroIndice = NULL;
-		int ultimoIndice = NULL;
+	size_t needleSize = needle.size();
+	size_t maximumIndex = palheiro.size() - needleSize;
 
-		for (int i = 0; i < palavrasDoDicionario.size(); i++){
+	size_t needleIndex;
+	for (size_t haystackIndex = 0; haystackIndex <= maximumIndex; haystackIndex++) {
+		for (needleIndex = 0; needleIndex < needleSize && needle[needleIndex] == palheiro[haystackIndex + needleIndex]; needleIndex++);
 
-			palavra = palavrasDoDicionario[i];
-
-			// percorrer linha e verificar correspondencia
-			for (int i = 0; i < linha.size() - palavra.size(); i++){
-
-				if (ultimoIndice - primeiroIndice == palavra.size())
-					break;
-
-				if (palavra[i] == linha[i] && primeiroIndice == NULL){
-					primeiroIndice = i;
-					ultimoIndice = i;
-				}
-				else if (palavra[i] == linha[i]){
-					ultimoIndice = i;
-				}
-				else {
-					primeiroIndice = NULL;
-					ultimoIndice = NULL;
-					break;
-				}
-			}
-
-			if (primeiroIndice != NULL)
-			for (int i = primeiroIndice; i <= ultimoIndice; i++){
-				for (int j = numeroIndice; j > 0; j--){
-					tela[j][i] = tela[j - 1][i];
-				}
-			}
+		if (needleIndex == needleSize) {
+			matches.push_back(haystackIndex);
+			matches.push_back(haystackIndex + (needleIndex - 1 - haystackIndex));
+			return matches;
 		}
 	}
+
+	return matches;
 }
 
-bool linhaCheia(vector< vector<string> > tela,string &linha, int &numeroLinhaCompleta){
-	bool vazia = false;
-	for (int i = 0; i < DimensaoVertical; i++){
+bool linhaCheia(vector<vector<string>> tela, string& linha, int& numeroLinhaCompleta){
+	for (int i = 0; i < dimensaoVertical; i++) {
 		numeroLinhaCompleta = i;
-		for (int j = 0; j < DimensaoHorizontal; j++){
-			if (tela[i][j] != " " && j == DimensaoHorizontal - 1){
-				continue;
+		linha = "";
+
+		for (int j = 0; j < dimensaoHorizontal; j++) {
+			if (tela[i][j] != " " && j == dimensaoHorizontal - 1) {
+				linha += tela[i][j];
+				return true;
 			}
-			else if (tela[i][j] != " "){
-				vazia = true;
-				return vazia;
-			}
-			else break;
-			}
+			else if (tela[i][j] == " ")
+				break;
+			else
+				linha += tela[i][j];
 		}
+	}
 
 	return false;
 }
@@ -441,76 +401,69 @@ void menuOpcoes(){
 	system("cls");
 
 	cout << "********************************************************************************\n"
-		 << "*                                 Controls                                     *\n"
-		 << "********************************************************************************\n\n\n";
-		
+		<< "*                                 Controls                                     *\n"
+		<< "********************************************************************************\n\n\n";
 
-	
 	cout << "\n  > Special key - VK_UP     \n\n"
-			"  > Right key   - VK_RIGHT  \n\n"
-			"  > Left key    - VK_LEFT   \n\n"
-			"  > Down key    - VK_DOWN   \n";
+		"  > Right key   - VK_RIGHT  \n\n"
+		"  > Left key    - VK_LEFT   \n\n"
+		"  > Down key    - VK_DOWN   \n";
 
 	cout << "\n\n\n\n\n          Press ENTER to change them or ESC to return to the main menu\n\n";
 
-
 	char tecla = _getch();
 
-		switch (tecla)
+	switch (tecla)
 	{
 	case 13:
 		alterarControlos();
 		break;
 	case 27:
-		menuInicial();
-		break;
+		return;
 	}
 
 }
 
-int alterarControlos(){
+void alterarControlos(){
 	system("cls");
 
 	cout << "********************************************************************************\n"
-		 << "*                                 Controls                                     *\n"
-		 << "********************************************************************************\n\n\n";
+		<< "*                                 Controls                                     *\n"
+		<< "********************************************************************************\n\n\n";
 
 	cout << "\n\n                           >>   Special key   <<     \n";
 	cout << "\n\n\n\n\n\n\n\n                           Press the key you want\n\n";
-	VKUP=_getch();
+	CTRL_CIMA = _getch();
 
 	system("cls");
 
 	cout << "********************************************************************************\n"
-		 << "*                                 Controls                                     *\n"
-		 << "********************************************************************************\n\n\n";
+		<< "*                                 Controls                                     *\n"
+		<< "********************************************************************************\n\n\n";
 
 	cout << "\n\n                               >>   Right key   <<     \n";
 	cout << "\n\n\n\n\n\n\n\n                           Press the key you want\n\n";
-	VKRIGHT=_getch();
+	CTRL_DIR = _getch();
 
 	system("cls");
 
 	cout << "********************************************************************************\n"
-		 << "*                                 Controls                                     *\n"
-		 << "********************************************************************************\n\n\n";
+		<< "*                                 Controls                                     *\n"
+		<< "********************************************************************************\n\n\n";
 
 	cout << "\n\n                               >>   Left key   <<     \n";
 	cout << "\n\n\n\n\n\n\n\n                           Press the key you want\n\n";
-	VKLEFT=_getch();
+	CTRL_ESQ = _getch();
 
 	system("cls");
 
 	cout << "********************************************************************************\n"
-		 << "*                                 Controls                                     *\n"
-		 << "********************************************************************************\n\n\n";
+		<< "*                                 Controls                                     *\n"
+		<< "********************************************************************************\n\n\n";
 
 	cout << "\n\n                               >>   Down key   <<     \n";
 	cout << "\n\n\n\n\n\n\n\n                           Press the key you want\n\n";
-	VKDOWN=_getch();
-
-menuInicial();
-	return 0;
+	CTRL_BAIXO = _getch();
 }
 
 void menuInstrucoes(){
@@ -518,28 +471,24 @@ void menuInstrucoes(){
 	system("cls");
 
 	cout << "********************************************************************************\n"
-		 << "*                               Instructions                                   *\n"
-		 << "********************************************************************************\n\n\n";
-		
+		<< "*                               Instructions                                   *\n"
+		<< "********************************************************************************\n\n\n";
 
-	
-   cout  << "  This game  is an adapted version from a  well known game TETRIS developed by\n" 
-	     << "  Alexey Pajitnov, Dmitry Pavlovsky and Vadim Gerasimov whitch was released in\n" 
-         << "  June 1984.\n"
-		 << "  Our version consists of stacking letters  that come down the screen in order\n"
-		 << "  to complete horizontal lines. When a line is formed, if a word is found, the\n"
-		 << "  player wins certain points and the word is erased.\n"
-		 << "  The game ends when the stack of letters reach the top of the screen.\n";
+
+
+	cout << "  This game  is an adapted version from a  well known game TETRIS developed by\n"
+		<< "  Alexey Pajitnov, Dmitry Pavlovsky and Vadim Gerasimov whitch was released in\n"
+		<< "  June 1984.\n"
+		<< "  Our version consists of stacking letters  that come down the screen in order\n"
+		<< "  to complete horizontal lines. When a line is formed, if a word is found, the\n"
+		<< "  player wins certain points and the word is erased.\n"
+		<< "  The game ends when the stack of letters reach the top of the screen.\n";
 
 	cout << "\n\n\n\n\n                     Press ENTER  to return to the main menu\n\n";
 
+	char tecla;
 
-	char tecla = _getch();
-
-		switch (tecla)
-	{
-	case 13:
-		menuInicial();
-		break;
-	}
+	do {
+		tecla = _getch();
+	} while (tecla != 13);
 }
