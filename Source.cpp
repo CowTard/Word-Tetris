@@ -26,7 +26,7 @@ vector<string> criarAlfabeto(), filtrarVetor(char, int = 0, int = 4343);
 bool terminarJogo(vector< vector<string> >&, int &);
 void menuOpcoes();
 int alterarControlos();
-
+void menuInstrucoes();
 // VARIAVEIS GLOBAIS
 vector<string> palavrasDicionario;
 vector<string> alfabeto = criarAlfabeto();
@@ -64,8 +64,10 @@ int menuInicial(){
 		prepararJogo();
 		break;
 	case '2':
+		menuOpcoes();
 		break;
 	case '3':
+		menuInstrucoes();
 		break;
 	case '0':
 		exit(0);
@@ -444,12 +446,12 @@ void menuOpcoes(){
 		
 
 	
-	cout << "\n\n  Special key - VK_UP     \n"
-			"   Right key  - VK_RIGHT  \n"
-			"    Left key  - VK_LEFT   \n"
-			"    Down key  - VK_DOWN   \n";
+	cout << "\n  > Special key - VK_UP     \n\n"
+			"  > Right key   - VK_RIGHT  \n\n"
+			"  > Left key    - VK_LEFT   \n\n"
+			"  > Down key    - VK_DOWN   \n";
 
-	cout << "\n\n\n\n\n\n\n         Press ENTER to change them or ESC to return to the main menu\n\n";
+	cout << "\n\n\n\n\n          Press ENTER to change them or ESC to return to the main menu\n\n";
 
 
 	char tecla = _getch();
@@ -509,4 +511,35 @@ int alterarControlos(){
 
 menuInicial();
 	return 0;
+}
+
+void menuInstrucoes(){
+
+	system("cls");
+
+	cout << "********************************************************************************\n"
+		 << "*                               Instructions                                   *\n"
+		 << "********************************************************************************\n\n\n";
+		
+
+	
+   cout  << "  This game  is an adapted version from a  well known game TETRIS developed by\n" 
+	     << "  Alexey Pajitnov, Dmitry Pavlovsky and Vadim Gerasimov whitch was released in\n" 
+         << "  June 1984.\n"
+		 << "  Our version consists of stacking letters  that come down the screen in order\n"
+		 << "  to complete horizontal lines. When a line is formed, if a word is found, the\n"
+		 << "  player wins certain points and the word is erased.\n"
+		 << "  The game ends when the stack of letters reach the top of the screen.\n";
+
+	cout << "\n\n\n\n\n                     Press ENTER  to return to the main menu\n\n";
+
+
+	char tecla = _getch();
+
+		switch (tecla)
+	{
+	case 13:
+		menuInicial();
+		break;
+	}
 }
